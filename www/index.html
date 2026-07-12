@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Slash & Pixel - Combat Engine Testbench</title>
+    <!-- Google Fonts: Orbitron & Inter para estilo futurista/cyberpunk -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Phaser 3 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+</head>
+<body>
+    <div id="app-wrapper">
+        <header>
+            <div class="logo">SLASH & PIXEL</div>
+            <div class="subtitle">ENGINE TESTBENCH // FASE 3</div>
+        </header>
+
+        <main id="main-layout">
+            <!-- Área do Jogo -->
+            <div id="game-section">
+                <div id="game-container"></div>
+                <div class="help-tooltip">
+                    <span class="desktop-controls">[W,A,S,D] Mover | [J/X] Ataque Fraco | [K/C] Forte | [L/V] Defesa | [I/Z] Esquiva | [O] Especial | [U] Supremo | [Espaço] Pulo Duplo</span>
+                    <span class="mobile-controls">Use os controles virtuais na tela para jogar</span>
+                </div>
+            </div>
+
+            <!-- Painel de Controle Lateral -->
+            <aside id="control-panel">
+                <div class="panel-section">
+                    <h2><span class="accent">//</span> VISUALIZAÇÃO</h2>
+                    <div class="control-row">
+                        <label for="toggle-boxes">Mostrar Hitboxes</label>
+                        <label class="switch">
+                            <input type="checkbox" id="toggle-boxes" checked>
+                            <span class="slider-round"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h2><span class="accent">//</span> FÍSICA E MOVIMENTAÇÃO</h2>
+                    
+                    <div class="control-group">
+                        <div class="slider-header">
+                            <span>Gravidade</span>
+                            <span id="gravity-val">1200</span>
+                        </div>
+                        <input type="range" id="gravity-slider" min="400" max="2500" value="1200" step="50">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="slider-header">
+                            <span>Velocidade de Movimento</span>
+                            <span id="speed-val">300</span>
+                        </div>
+                        <input type="range" id="speed-slider" min="100" max="600" value="300" step="10">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="slider-header">
+                            <span>Força do Pulo</span>
+                            <span id="jump-val">550</span>
+                        </div>
+                        <input type="range" id="jump-slider" min="200" max="1000" value="550" step="10">
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h2><span class="accent">//</span> COMPORTAMENTO DO CPU</h2>
+                    <div class="control-group">
+                        <label for="cpu-behavior">Modo de IA</label>
+                        <select id="cpu-behavior">
+                            <option value="dummy">Boneco de Treino (Inativo)</option>
+                            <option value="blocker" selected>Defensor (Bloqueia Ataques)</option>
+                            <option value="aggressor">Agressor (Persegue e Ataca)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h2><span class="accent">//</span> ATRIBUTOS DE COMBATE</h2>
+                    <div class="control-group">
+                        <div class="slider-header">
+                            <span>Alcance de Kaelen (Florete)</span>
+                            <span id="kaelen-range-val">65px</span>
+                        </div>
+                        <input type="range" id="kaelen-range-slider" min="30" max="120" value="65" step="5">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="slider-header">
+                            <span>Dano de Valeri (Montante)</span>
+                            <span id="valeri-damage-val">25</span>
+                        </div>
+                        <input type="range" id="valeri-damage-slider" min="10" max="60" value="25" step="1">
+                    </div>
+                </div>
+
+                <button id="reset-button" class="btn-primary">RESTAURAR PADRÕES</button>
+            </aside>
+        </main>
+
+        <!-- Log de Eventos de Combate -->
+        <footer id="combat-log-section">
+            <div class="log-title">CONSOLE DE COMBATE // LOGS EM TEMPO REAL</div>
+            <div id="log-window">
+                <div class="log-entry system">[SISTEMA] Motor de combate carregado. Pronto para iniciar o teste.</div>
+            </div>
+        </footer>
+
+        <!-- Controles Virtuais para Mobile (exibidos apenas em dispositivos touch) -->
+        <div id="mobile-joystick-container" class="mobile-only">
+            <!-- Direcionais na Esquerda -->
+            <div id="mobile-dpad">
+                <button id="btn-left" class="dpad-btn">◀</button>
+                <div class="dpad-vertical">
+                    <button id="btn-up" class="dpad-btn">▲</button>
+                    <button id="btn-down" class="dpad-btn">▼</button>
+                </div>
+                <button id="btn-right" class="dpad-btn">▶</button>
+            </div>
+            
+            <!-- Botões de Ação na Direita -->
+            <div id="mobile-actions">
+                <div class="action-row">
+                    <button id="btn-dodge" class="action-btn circle-btn secondary">DODGE</button>
+                    <button id="btn-jump" class="action-btn circle-btn secondary">PULO</button>
+                </div>
+                <div class="action-row">
+                    <button id="btn-special" class="action-btn circle-btn secondary" style="border-color: #ff00ff; color: #ff00ff; box-shadow: 0 0 8px rgba(255, 0, 255, 0.2);">ESPEC</button>
+                    <button id="btn-ultimate" class="action-btn circle-btn secondary" style="border-color: #ffdd00; color: #ffdd00; box-shadow: 0 0 8px rgba(255, 221, 0, 0.2);">SUPREMO</button>
+                </div>
+                <div class="action-row">
+                    <button id="btn-light" class="action-btn circle-btn primary">FRACA</button>
+                    <button id="btn-heavy" class="action-btn circle-btn primary">FORTE</button>
+                    <button id="btn-block" class="action-btn circle-btn main-block">DEFESA</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts do Jogo -->
+    <script src="js/controls.js"></script>
+    <script src="js/sprites.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>

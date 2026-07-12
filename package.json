@@ -1,0 +1,23 @@
+{
+  "name": "com.antigravity.slashandpixel",
+  "displayName": "SlashAndPixel",
+  "version": "1.0.0",
+  "description": "Jogo de combate tático 2D com armas em pixel art.",
+  "main": "www/index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ecosystem:cordova"
+  ],
+  "author": "Antigravity Dev Team",
+  "license": "MIT",
+  "devDependencies": {
+    "cordova-android": "^13.0.0"
+  },
+  "cordova": {
+    "platforms": [
+      "android"
+    ]
+  }
+}

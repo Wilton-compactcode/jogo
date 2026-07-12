@@ -1,0 +1,179 @@
+# Documento de Requisitos de Produto (PRD)
+## Projeto: Slash & Pixel (Nome Temporário)
+### Jogo de Combate 2D com Armas em Pixel Art
+
+---
+
+## 1. Visão Geral do Jogo
+### 1.1. Conceito
+*Slash & Pixel* é um jogo de luta e combate tático em arena 2D focado em duelos rápidos e letais com armas brancas e de médio alcance. O jogo combina a precisão técnica de jogos de combate clássicos (como *Samurai Shodown* e *Bushido Blade*) com a agilidade de platform fighters modernos. Cada personagem possui uma arma distinta com alcances, pesos e mecânicas exclusivas, traduzidas em uma estética pixel art de alta fidelidade (estilo 16-bit/32-bit).
+
+### 1.2. Pilares de Design
+1. **Precisão e Resposta:** Controles extremamente responsivos. Cada ataque tem riscos (tempo de recuperação) e recompensas claras.
+2. **Identidade Visual Marcante:** Pixel art detalhado com animações fluidas (sub-pixel animation) que transmitem o peso e o impacto de cada golpe.
+3. **Controle de Espaço (Spacing e Footsies):** O controle da distância em relação à arma do adversário é o fator crucial para a vitória.
+4. **Combate Baseado em Reação:** Mecânicas robustas de parry (aparar), block (bloquear) e esquivas rápidas.
+
+---
+
+## 2. Dinâmica do Jogo e Loop de Gameplay
+### 2.1. Loop de Jogo Principal (Core Loop)
+1. **Posicionamento (Footsies):** Movimentar-se na arena buscando a distância ideal da sua arma em relação à do oponente.
+2. **Abertura/Isca (Baiting):** Induzir o oponente a errar um ataque (Whiff) ou quebrar sua guarda.
+3. **Punição/Combo (Punish):** Desferir combos rápidos ou golpes de alto impacto para reduzir a barra de vida do oponente.
+4. **Resolução de Round:** Vence quem zerar a vida do oponente em melhor de 3 rounds.
+
+### 2.2. Interface do Usuário no Combate (HUD)
+- **Barra de Vida (HP):** Saúde do personagem. Chegar a 0 resulta em nocaute (KO).
+- **Barra de Postura/Escudo (Postura):** Diminui ao bloquear ataques. Se chegar a 0, ocorre a "Quebra de Guarda" (Stun temporário de 1.5s).
+- **Barra de Especial (Tensão/Energia):** Acumula ao causar/receber dano ou ao realizar parries perfeitos. Permite usar técnicas especiais aprimoradas ou o "Ataque Supremo".
+
+---
+
+## 3. Sistema de Movimentação e Combate
+### 3.1. Movimentos de Base (Compatíveis com Combate)
+Para garantir fluidez e dinamismo, todos os personagens possuem o seguinte conjunto de movimentos padrão:
+
+| Movimento | Comando | Descrição |
+| :--- | :--- | :--- |
+| **Caminhar** | `Direcional Esquerda/Direita` | Movimento tático básico. Mantém a guarda ativa para ataques frontais altos. |
+| **Dash (Investida/Recuo)** | `Toque duplo Direcional (Fwd/Back)` | Movimento rápido de reposicionamento. O dash para trás (Backdash) possui frames de invencibilidade (i-frames) no início. |
+| **Pulo / Pulo Duplo** | `Cima / Cima (no ar)` | Usado para evitar ataques baixos (sweeps) ou iniciar abordagens aéreas. |
+| **Corrida** | `Segurar Direcional + Botão de Dash` | Permite ataques em corrida (Run Attacks) específicos. |
+| **Agachar** | `Direcional Baixo` | Reduz a hitbox. Permite defender ataques baixos e desferir golpes agachados. |
+| **Esquiva (Dodge Roll)** | `Direcional Baixo + Dash` | Rola no chão. Desvia de projéteis e ataques de corte horizontais, mas é vulnerável no final da animação. |
+
+### 3.2. Mecânicas Avançadas de Combate
+- **Bloqueio Ativo (Block):** Feito segurando o direcional oposto ao oponente. Absorve dano físico, mas consome a Barra de Postura.
+- **Aparo Perfeito (Parry):** Pressionar o botão de bloqueio no frame exato do impacto inimigo. Anula o consumo de postura, causa um leve stun no oponente e enche a barra de especial.
+- **Clash de Armas (Weapon Clash):** Se dois ataques de forças similares se chocam nos mesmos frames ativos, as armas faiscam, ambos os personagens são empurrados para trás e entram em estado neutro instantaneamente.
+- **Super Armor:** Alguns ataques pesados têm frames onde o personagem não sofre interrupção (hitstun) ao levar dano, embora ainda receba o dano na vida.
+
+---
+
+## 4. Personagens e Seus Estilos de Jogo
+Abaixo estão os 5 personagens iniciais projetados para o lançamento do jogo, cada um representando um arquétipo de combate único.
+
+### 4.1. KAELEN – O Duelista Veloz (Arquétipo: Rushdown/Spacing)
+*   **Visual Pixel Art:** Jovem esguio com um sobretudo azul esvoaçante, cabelos brancos e postura clássica de esgrima. As animações de sua arma deixam rastros azuis finos e pontiagudos na tela.
+*   **Arma:** Florete/Rapier de aço Damasco.
+*   **Atributos:**
+    *   Velocidade: 9/10
+    *   Alcance: 7/10
+    *   Dano: 5/10
+    *   Defesa: 5/10
+*   **Dinâmica:** Focado em estocadas rápidas e punição de erros. Kaelen avança e recua muito rapidamente, usando sua velocidade para induzir o inimigo ao erro.
+*   **Movimentos Especiais:**
+    *   *Estocada Relâmpago:* Uma sequência rápida de 5 estocadas lineares.
+    *   *Passo de Esgrima (Fente):* Um dash para frente seguido de uma estocada profunda que quebra postura.
+    *   *Aparar e Ripostar:* Uma postura defensiva que, se atingida, desfere um contra-ataque automático nas costas do inimigo.
+
+### 4.2. VALERI – A Vanguarda Implacável (Arquétipo: Heavy/Juggernaut)
+*   **Visual Pixel Art:** Mulher alta e musculosa usando armadura de placas pesada com detalhes em dourado e vermelho. Movimentos lentos, porém com animações de impacto devastadoras que tremem a tela.
+*   **Arma:** Espada Montante (Greatsword) de duas mãos.
+*   **Atributos:**
+    *   Velocidade: 3/10
+    *   Alcance: 8/10
+    *   Dano: 9/10
+    *   Defesa: 9/10
+*   **Dinâmica:** Seus golpes possuem *Super Armor*. Valeri aceita trocar dano com o inimigo porque sabe que seu golpe único causará dano devastador.
+*   **Movimentos Especiais:**
+    *   *Corte Sísmico:* Um golpe vertical de cima para baixo que quebra o chão, criando uma onda de choque de curto alcance.
+    *   *Avanço de Escudo:* Corre em direção ao inimigo ignorando projéteis e o empurra contra a parede.
+    *   *Giro da Lâmina:* Gira a montante ao redor do corpo em 360 graus, repelindo qualquer ataque aéreo ou terrestre próximo.
+
+### 4.3. RIN – A Sombra de Outono (Arquétipo: Assassin/Mix-up)
+*   **Visual Pixel Art:** Silhueta vestida com trajes shinobi escuros e lenço vermelho longo. Olhos brilhantes que piscam no escuro. Movimentos acrobáticos e animações que simulam fumaça preta e folhas secas de outono.
+*   **Armas:** Duas Katanas curtas (Wakizashi) envenenadas.
+*   **Atributos:**
+    *   Velocidade: 10/10
+    *   Alcance: 4/10
+    *   Dano: 6/10 (com dano contínuo por veneno)
+    *   Defesa: 3/10
+*   **Dinâmica:** Rin se infiltra na guarda inimiga usando teletransportes e clones de fumaça. Causa dano contínuo (DoT) por veneno a cada acerto bem-sucedido.
+*   **Movimentos Especiais:**
+    *   *Passo de Fumaça:* Rin desaparece e ressurge atrás do inimigo ou no ar.
+    *   *Lâmina Tóxica:* Encanta suas katanas com veneno por 6 segundos.
+    *   *Dança das Sombras:* Avança deixando clones de fumaça que atacam em tempos diferentes, confundindo a defesa do inimigo.
+
+### 4.4. BALTHAZAR – O Engenheiro de Ferro (Arquétipo: Zoner/Setup)
+*   **Visual Pixel Art:** Um veterano caolho com próteses mecânicas a vapor, casaco marrom pesado cheio de bolsos e ferramentas. As animações incluem engrenagens soltando fumaça e faíscas amarelas de pólvora.
+*   **Arma:** Mosquete Pesado com Baioneta acoplada.
+*   **Atributos:**
+    *   Velocidade: 4/10
+    *   Alcance: 10/10 (à distância) / 5/10 (corpo a corpo)
+    *   Dano: 7/10
+    *   Defesa: 6/10
+*   **Dinâmica:** Controla o espaço na tela disparando projéteis e posicionando armadilhas mecânicas no chão. Se o inimigo se aproximar, Balthazar usa a baioneta para mantê-lo afastado.
+*   **Movimentos Especiais:**
+    *   *Tiro de Precisão:* Dispara uma bala rápida de mosquete. Requer recarga (animação curta).
+    *   *Mina de Pressão:* Lança uma engrenagem explosiva no chão que detona se o inimigo pisar ou se for atingida por um tiro.
+    *   *Estocada de Baioneta:* Um ataque corpo a corpo que empurra o oponente de volta para a distância de tiro.
+
+### 4.5. MAEVE – A Valquíria da Tempestade (Arquétipo: Mid-Range/Spacing/Poke)
+*   **Visual Pixel Art:** Guerreira com armadura leve de couro e penas, cabelos trançados que flutuam ao vento e uma lança adornada com runas que brilham com eletricidade azul-clara.
+*   **Arma:** Alabarda/Lança Rúnica.
+*   **Atributos:**
+    *   Velocidade: 7/10
+    *   Alcance: 9/10 (corpo a corpo)
+    *   Dano: 6/10
+    *   Defesa: 6/10
+*   **Dinâmica:** Brilha no combate a média distância. A ponta da lança causa dano crítico ("Sweetspot"), enquanto golpes desferidos com a haste causam dano reduzido.
+*   **Movimentos Especiais:**
+    *   *Estocada Rúnica:* Uma estocada com raio elétrico que atravessa a tela horizontalmente.
+    *   *Giro Celestial:* Maeve gira a lança acima da cabeça, criando um escudo de vento que bloqueia projéteis e rebate oponentes no ar.
+    *   *Salto da Valquíria:* Maeve salta alto e cai enterrando a lança no chão, criando uma explosão de energia rúnica ao redor do ponto de impacto.
+
+---
+
+## 5. Especificações Técnicas e Diretrizes de Arte
+### 5.1. Diretrizes de Pixel Art
+- **Resolução de Tela Alvo:** 640x360 pixels (escala 16:9 ideal para aspect ratio moderno pixel-perfect).
+- **Tamanho dos Sprites:**
+  - Personagens Médios (Kaelen, Rin, Maeve): ~64x64 pixels de bounding box.
+  - Personagens Grandes (Valeri): ~96x96 pixels.
+  - Balthazar: ~80x80 pixels.
+- **Paleta de Cores:** Paleta restrita por personagem (máximo 16 cores incluindo transparência) para garantir coesão visual retrô de arcade.
+- **Animações (Taxa de Quadros):** Animações de combate desenhadas a 12 ou 15 quadros por segundo (FPS) para dar um aspecto fluido mas mantendo o estilo clássico. Animações chave (como frames de impacto e wind-up) devem usar técnicas de *smear* (borrão de movimento) em pixel art.
+
+### 5.2. Lista de Animações Necessárias por Personagem
+Para que o combate funcione de forma compatível, cada personagem precisa dos seguintes estados de animação:
+1.  **Idle (Espera):** Respiração e pose de guarda ativa.
+2.  **Move Forward/Backward:** Caminhada focada, mantendo o centro de gravidade baixo.
+3.  **Dash Frontal/Traseiro:** Movimento rápido de arrancada.
+4.  **Jump Up/Forward (Subida e Descida):** Pose de salto dinâmico.
+5.  **Crouch:** Transição de pé para agachado e espera agachado.
+6.  **Light Attack (Combo 1, 2, 3):** Ataques rápidos com pouca recuperação.
+7.  **Heavy Attack:** Golpe lento, forte, com grande rastro visual.
+8.  **Crouching Attack:** Ataque baixo (geralmente rasteira).
+9.  **Air Attack:** Golpe desferido no ar.
+10. **Special Moves (x3):** Animações personalizadas para cada habilidade especial de classe.
+11. **Hitstun (Leve e Forte):** Reação ao receber golpes.
+12. **Block (Alto e Baixo):** Animação defendendo com a arma/escudo.
+13. **Parry Trigger:** Um frame rápido onde o personagem se defende ativamente.
+14. **Knockdown & Wake-up:** Caindo no chão e levantando-se.
+15. **Victory/Defeat:** Poses para o fim do round.
+
+---
+
+## 6. Arquitetura Técnica e Integração (Cordova)
+Como o projeto está estruturado em um ambiente **Cordova/Web**, a seguinte pilha de desenvolvimento é recomendada:
+
+- **Engine de Jogo:** *Phaser 3* (Framework HTML5 robusto para jogos 2D canvas/WebGL).
+- **Gerenciador de Estado:** State Machine de combate (FSM - Finite State Machine) escrito em TypeScript/JavaScript para controlar os estados de cada entidade de forma rígida (Idle, Attacking, Hitstun, Blocking, Stunned).
+- **Colisões e Deteção:** Sistema de colisão personalizado AABB (Axis-Aligned Bounding Boxes) separado em:
+  - *Pushbox:* Para evitar que personagens passem uns por dentro dos outros.
+  - *Hurtbox:* Área onde o personagem recebe dano.
+  - *Hitbox:* Área ativa da arma que causa dano ao colidir com o hurtbox inimigo.
+- **Controles (Mobile & Desktop):**
+  - Mobile (Cordova): D-pad virtual analógico/direcional na tela esquerda e botões de ação à direita.
+  - Desktop: Mapeamento de teclado padrão (WASD + JKL) e suporte a Gamepads via Web Gamepad API.
+
+---
+
+## 7. Cronograma e Fases de Desenvolvimento
+1.  **Fase 1 (Protótipo Cinza - Graybox Combat):** Implementar retângulos coloridos simples representando as caixas de colisão. Testar movimentação, pulo, ataque básico, bloqueio e o game feel.
+2.  **Fase 2 (Integração de Sprites):** Inserir os sprites de pixel art substituindo as formas geométricas básicas.
+3.  **Fase 3 (Implementação de Combates e Combos):** Adicionar parry, barra de postura e reações a golpes (hitstun).
+4.  **Fase 4 (Menu, UI e Áudio):** Implementar telas de menu, seleção de personagens e efeitos sonoros.
+5.  **Fase 5 (Build Mobile):** Empacotar com Apache Cordova para iOS/Android e validar desempenho dos controles e framerate de renderização.
