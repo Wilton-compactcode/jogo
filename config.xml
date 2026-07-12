@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.antigravity.slashandpixel" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>SlashAndPixel</name>
+<widget id="com.antigravity.strikezone" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>StrikeZone</name>
     <description>
         Jogo de combate tático 2D com armas em pixel art. Protótipo de motor físico e combate.
     </description>
