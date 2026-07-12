@@ -1,4 +1,4 @@
-// Gerador Procedural de Sprites Pixel Art para Slash & Pixel
+// Gerador Procedural de Sprites Pixel Art para Strike Zone
 window.SpriteGenerator = {
     // Paletas de Cores
     palettes: {
@@ -24,6 +24,17 @@ window.SpriteGenerator = {
             'd': '#2f3542',         // Botas
             'w': '#ffffff',         // Espada lâmina
             'e': 'rgba(255, 0, 85, 0.4)' // Brilho de energia vermelho
+        },
+        rin: {
+            '.': null,              // Transparente
+            'k': '#12131c',         // Contorno escuro
+            'r': '#ff3838',         // Lenço vermelho
+            's': '#ffeaa7',         // Pele
+            'p': '#1e272e',         // Traje shinobi escuro
+            'g': '#57606f',         // Detalhes cinza
+            'w': '#ffffff',         // Katanas
+            'v': '#2ed573',         // Veneno verde brilhante
+            'e': 'rgba(46, 213, 115, 0.4)' // Brilho de fumaça/energia
         }
     },
 
@@ -611,11 +622,310 @@ window.SpriteGenerator = {
         ]
     },
 
+    rinFrames: {
+        // Idle (4 frames)
+        idle: [
+            [
+                "................................",
+                ".............gggg...............",
+                "............gggggg..............",
+                "...........ggssssg..............",
+                "...........ggssssss.............",
+                "............ksssss..............",
+                ".............sssss...rrr........",
+                "............pppppppprrrr........",
+                "...........ppppppppprrr.........",
+                "..........pppgpgppppp...........",
+                "..........pppgpgppppp...........",
+                "..........ppppppppppp...........",
+                "...........ppppppppp............",
+                "...........ggggggggg............",
+                "...........ggggggggg............",
+                "...........pppp.pppp............",
+                "...........pppp.pppp............",
+                "...........kkkk.kkkk............",
+                "...........kkkk.kkkk............",
+                "................................"
+            ],
+            [
+                "................................",
+                ".............gggg...............",
+                "............gggggg..............",
+                "...........ggssssg..............",
+                "...........ggssssss.............",
+                "............ksssss..............",
+                ".............sssss...rrrr.......",
+                "............pppppppprrrrr.......",
+                "...........ppppppppprrrr........",
+                "..........pppgpgppppp...........",
+                "..........pppgpgppppp...........",
+                "..........ppppppppppp...........",
+                "...........ppppppppp............",
+                "...........ggggggggg............",
+                "...........ggggggggg............",
+                "...........pppp.pppp............",
+                "...........pppp.pppp............",
+                "...........kkkk.kkkk............",
+                "...........kkkk.kkkk............",
+                "................................"
+            ],
+            [
+                "................................",
+                "................................",
+                ".............gggg...............",
+                "............gggggg..............",
+                "...........ggssssg..............",
+                "...........ggssssss.............",
+                "............ksssss..............",
+                ".............sssss...rrr........",
+                "............pppppppprrrr........",
+                "...........ppppppppprrr.........",
+                "..........pppgpgppppp...........",
+                "          pppgpgppppp...........",
+                "..........ppppppppppp...........",
+                "...........ppppppppp............",
+                "...........ggggggggg............",
+                "...........ggggggggg............",
+                "...........pppp.pppp............",
+                "...........kkkk.kkkk............",
+                "...........kkkk.kkkk............",
+                "................................"
+            ],
+            [
+                "................................",
+                ".............gggg...............",
+                "............gggggg..............",
+                "...........ggssssg..............",
+                "...........ggssssss.............",
+                "............ksssss..............",
+                ".............sssss...rrrr.......",
+                "............pppppppprrrrr.......",
+                "...........ppppppppprrrr........",
+                "..........pppgpgppppp...........",
+                "..........pppgpgppppp...........",
+                "..........ppppppppppp...........",
+                "...........ppppppppp............",
+                "...........ggggggggg............",
+                "...........ggggggggg............",
+                "...........pppp.pppp............",
+                "...........pppp.pppp............",
+                "...........kkkk.kkkk............",
+                "...........kkkk.kkkk............",
+                "................................"
+            ]
+        ],
+        // Walk (4 frames)
+        walk: [
+            [
+                "................................",
+                ".............gggg...............",
+                "............gggggg..............",
+                "...........ggssssg..............",
+                "...........ggssssss.............",
+                "............ksssss......rrrr....",
+                "............pppppppp...rrrrr....",
+                "...........ppppppppp..rrrrr.....",
+                "..........pppgpgppppp...........",
+                "          ppppppppppp...........",
+                "...........ppppppppp............",
+                "...........gggg.gggg............",
+                "...........gggg..ggg............",
+                "..........gggg...ggg............",
+                "..........kkk.....kkk...........",
+                "................................"
+            ],
+            [
+                "................................",
+                ".............gggg...............",
+                "............gggggg..............",
+                "...........ggssssg..............",
+                "...........ggssssss.............",
+                "............ksssss.......rrrr...",
+                "............pppppppp....rrrrr...",
+                "...........ppppppppp...rrrrr....",
+                "..........pppgpgppppp...........",
+                "..........ppppppppppp...........",
+                "...........ppppppppp............",
+                "............gggggggg............",
+                "............gggggggg............",
+                "............gggg.ggg............",
+                "............kkk...kk............",
+                "................................"
+            ],
+            [
+                "................................",
+                ".............gggg...............",
+                "............gggggg..............",
+                "...........ggssssg..............",
+                "...........ggssssss.............",
+                "............ksssss......rrrr....",
+                "............pppppppp...rrrrr....",
+                "...........ppppppppp..rrrrr.....",
+                "..........pppgpgppppp...........",
+                "..........ppppppppppp...........",
+                "...........ppppppppp............",
+                "............gggg.ggg............",
+                "............ggg..ggg............",
+                "............ggg..gggg...........",
+                "............kkk...kkk...........",
+                "................................"
+            ],
+            [
+                "................................",
+                ".............gggg...............",
+                "............gggggg..............",
+                "...........ggssssg..............",
+                "...........ggssssss.............",
+                "............ksssss.......rrrr...",
+                "............pppppppp....rrrrr...",
+                "...........ppppppppp...rrrrr....",
+                "..........pppgpgppppp...........",
+                "..........ppppppppppp...........",
+                "...........ppppppppp............",
+                "............gggggggg............",
+                "............gggggggg............",
+                "............ggg..ggg............",
+                "............kk...kkk............",
+                "................................"
+            ]
+        ],
+        // Light Attack (Katana rápida)
+        lightAttack: [
+            "................................",
+            "................................",
+            ".............gggg...............",
+            "............gggggg..............",
+            "...........ggssssg..............",
+            "...........ggssssss.............",
+            "............ksssss..v...........",
+            "............pppppp.vvv..........",
+            ".......ppppppppppppvvv..........",
+            ".......vvvvvvvvvvvvvvvvvvvvvv...",
+            ".......ppppppppppppvvv..........",
+            "............pppppp.vvv..........",
+            "...........pppppppp..v..........",
+            "...........gggg.ggg.............",
+            "...........gggg.ggg.............",
+            "...........kkk...kkk............",
+            "................................"
+        ],
+        // Heavy Attack (Estocada de veneno)
+        heavyAttack: [
+            "................................",
+            ".............gggg...............",
+            "............gggggg..............",
+            "...........ggssssg............ee",
+            "...........ggssssss.........eeee",
+            "............ksssss........eeeeee",
+            "............pppppp......eeeeeeee",
+            "........pppppppppppp..eeeeeeeeee",
+            ".......vvvvvvvvvvvvvvvvvvvvvvvvv",
+            "........pppppppppppp..eeeeeeeeee",
+            "............pppppp......eeeeeeee",
+            "...........gggg.ggg.......eeeeee",
+            "..........gggg...ggg........eeee",
+            ".........kkk......kkk.........ee",
+            "................................"
+        ],
+        // Block (Defesa com katanas cruzadas e fumaça/veneno)
+        block: [
+            "................................",
+            ".............gggg...............",
+            "............gggggg..............",
+            "...........ggssssg.e............",
+            "...........ggsssssseee..........",
+            "............kssssseeeee.w.......",
+            ".............ssssseeeee.w.......",
+            "............pppeeeppeee.v.......",
+            "...........pppeeepppeee.v.......",
+            "..........ppppeeppppeee.v.......",
+            "..........ppppeeppppeee.v.......",
+            "..........ppppeeppppeee.v.......",
+            "...........pppeeepppeee.v.......",
+            "...........gggggggeeeee.........",
+            "...........gggggggggge..........",
+            "...........gggg.gggg............",
+            "...........kkkk.kkkk............",
+            "................................"
+        ],
+        // Dodge (Desaparece em fumaça)
+        dodge: [
+            "................................",
+            "................................",
+            "................................",
+            "................................",
+            ".............eeeeee.............",
+            "...........eeeeeeeeee...........",
+            "..........eeeppppppee...........",
+            ".........eeppppppppppe..........",
+            "........eepppppppppppee.........",
+            "........epppppppppppppe.........",
+            "........epppppppppppppe.........",
+            "........eepppppppppppee.........",
+            ".........eeppppppppee...........",
+            "..........eeekkkkkeee...........",
+            "............eeeeee..............",
+            "................................"
+        ],
+        // Hitstun (Machucada)
+        hitstun: [
+            "................................",
+            "..........gggggg................",
+            ".........gggggggg...............",
+            "........gggssssgg...............",
+            "........ggssssss................",
+            ".........ksssss.................",
+            "..........sssss.................",
+            "...........pppppppp.............",
+            "..........pppppppppp............",
+            ".........pppgpgpppppp...........",
+            ".........pppgpgpppppp...........",
+            "..........pppppppppp............",
+            "...........pppppppp.............",
+            "............gggggggg............",
+            "...........gggg..ggg............",
+            "..........kkk.....kkk...........",
+            "................................"
+        ],
+        // Special (Selo ninja/Jutsu)
+        special: [
+            "................................",
+            ".............gggg...............",
+            "............gggggg..............",
+            "...........ggssssg..............",
+            "...........ggssssss.............",
+            "............ksssss...e..........",
+            "............pppppp..eee.........",
+            "........pppppppppppp....e.......",
+            ".......vvvvvvvvvvvvvvvvvvvvvv...",
+            "........pppppppppppp....e.......",
+            "............pppppp..eee.........",
+            "...........gggg.ggg..e..........",
+            "..........gggg...ggg............",
+            ".........kkk......kkk...........",
+            "................................",
+            "................................",
+            "................................",
+            "................................",
+            "................................",
+            "................................"
+        ]
+    },
+
     // Função interna para criar spritesheet no canvas e registrar no Phaser
     createSpritesheet: function(scene, key, charType) {
-        const isKaelen = charType === 'kaelen';
-        const framesData = isKaelen ? this.kaelenFrames : this.valeriFrames;
-        const palette = isKaelen ? this.palettes.kaelen : this.palettes.valeri;
+        let framesData;
+        let palette;
+        if (charType === 'kaelen') {
+            framesData = this.kaelenFrames;
+            palette = this.palettes.kaelen;
+        } else if (charType === 'valeri') {
+            framesData = this.valeriFrames;
+            palette = this.palettes.valeri;
+        } else if (charType === 'rin') {
+            framesData = this.rinFrames;
+            palette = this.palettes.rin;
+        }
 
         // Lista ordenada de quadros a renderizar horizontalmente
         const framesList = [];
@@ -625,17 +935,17 @@ window.SpriteGenerator = {
         // 4 quadros de Walk
         framesList.push(...framesData.walk);
         // 1 quadro de Light Attack
-        framesList.push(framesData.lightAttack[0]);
+        framesList.push(framesData.lightAttack);
         // 1 quadro de Heavy Attack
-        framesList.push(framesData.heavyAttack[0]);
+        framesList.push(framesData.heavyAttack);
         // 1 quadro de Block
-        framesList.push(framesData.block[0]);
+        framesList.push(framesData.block);
         // 1 quadro de Dodge
-        framesList.push(framesData.dodge[0]);
+        framesList.push(framesData.dodge);
         // 1 quadro de Hitstun
-        framesList.push(framesData.hitstun[0]);
+        framesList.push(framesData.hitstun);
         // 1 quadro de Special
-        framesList.push(framesData.special[0]);
+        framesList.push(framesData.special);
 
         const totalFrames = framesList.length;
         const spriteSize = 32; // Resolução lógica da matriz

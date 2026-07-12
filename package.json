@@ -1,6 +1,6 @@
 {
-  "name": "com.antigravity.slashandpixel",
-  "displayName": "SlashAndPixel",
+  "name": "com.antigravity.strikezone",
+  "displayName": "StrikeZone",
   "version": "1.0.0",
   "description": "Jogo de combate tático 2D com armas em pixel art.",
   "main": "www/index.html",
