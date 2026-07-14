@@ -913,122 +913,335 @@ class Projectile extends Phaser.GameObjects.Sprite {
     }
 }
 
-// Desenhar Cenário Cyberpunk Profissional
+// Desenhar Cenário: Porto — Barcos Grandes e Plateias
 function drawScenery(scene, W, H, GROUND_Y) {
     // Usar valores padrão se não forem passados (modo lab sem resize)
     if (!W) W = scene.scale.width;
     if (!H) H = scene.scale.height;
     if (!GROUND_Y) GROUND_Y = Math.round(H * 0.89);
 
-    const skyH = GROUND_Y; // O céu cobre do topo até o chão
+    const skyH = GROUND_Y;
 
-    // 1. Céu com Degradê
+    // ======================
+    // 1. CÉU DIURNO — Degradê azul claro
+    // ======================
     const skyGraphics = scene.add.graphics().setDepth(-10);
-    const step = Math.max(4, Math.round(skyH / 40));
+    const step = Math.max(2, Math.round(skyH / 60));
     for (let y = 0; y < skyH; y += step) {
-        const percent = y / skyH;
-        const r = Math.round(8 + (21 - 8) * percent);
-        const g = Math.round(10 + (17 - 10) * percent);
-        const b = Math.round(15 + (36 - 15) * percent);
+        const t = y / skyH;
+        const r = Math.round(80 + (160 - 80) * t);
+        const g = Math.round(160 + (210 - 160) * t);
+        const b = Math.round(230 + (240 - 230) * t);
         const color = (r << 16) + (g << 8) + b;
         skyGraphics.fillStyle(color, 1);
-        skyGraphics.fillRect(0, y, W, step);
+        skyGraphics.fillRect(0, y, W, step + 1);
     }
 
-    // 2. Estrelas Cintilantes Aleatórias
-    const starCount = Math.round(W / 16);
-    for (let i = 0; i < starCount; i++) {
-        const starX = Phaser.Math.FloatBetween(0, W);
-        const starY = Phaser.Math.FloatBetween(0, skyH * 0.65);
-        const starRadius = Phaser.Math.FloatBetween(0.6, 1.5);
-        const starAlpha = Phaser.Math.FloatBetween(0.3, 0.9);
-        skyGraphics.fillStyle(0x00f0ff, starAlpha);
-        skyGraphics.fillCircle(starX, starY, starRadius);
+    // ======================
+    // 2. SOL
+    // ======================
+    const sunX = W * 0.15;
+    const sunY = skyH * 0.16;
+    const sunR = Math.round(W * 0.038);
+    skyGraphics.fillStyle(0xffe566, 0.12);
+    skyGraphics.fillCircle(sunX, sunY, sunR * 2.8);
+    skyGraphics.fillStyle(0xffe566, 0.22);
+    skyGraphics.fillCircle(sunX, sunY, sunR * 2.0);
+    skyGraphics.fillStyle(0xfff0a0, 0.55);
+    skyGraphics.fillCircle(sunX, sunY, sunR * 1.35);
+    skyGraphics.fillStyle(0xfff8cc, 1);
+    skyGraphics.fillCircle(sunX, sunY, sunR);
+
+    // ======================
+    // 3. NUVENS
+    // ======================
+    const drawCloud = (gfx, cx, cy, scale) => {
+        gfx.fillStyle(0xffffff, 0.82);
+        gfx.fillEllipse(cx, cy, 60 * scale, 22 * scale);
+        gfx.fillEllipse(cx - 16 * scale, cy + 4 * scale, 38 * scale, 16 * scale);
+        gfx.fillEllipse(cx + 18 * scale, cy + 5 * scale, 34 * scale, 14 * scale);
+        gfx.fillEllipse(cx + 4 * scale, cy - 10 * scale, 32 * scale, 16 * scale);
+    };
+    drawCloud(skyGraphics, W * 0.35, skyH * 0.12, 1.2);
+    drawCloud(skyGraphics, W * 0.62, skyH * 0.08, 0.9);
+    drawCloud(skyGraphics, W * 0.80, skyH * 0.18, 0.7);
+    drawCloud(skyGraphics, W * 0.50, skyH * 0.22, 1.0);
+
+    // ======================
+    // 4. MONTANHAS AO FUNDO (silhueta)
+    // ======================
+    const mtGraphics = scene.add.graphics().setDepth(-9);
+    mtGraphics.fillStyle(0x9ab8cc, 0.55);
+    const drawMountain = (gfx, bx, bw, bh) => {
+        gfx.fillTriangle(bx, GROUND_Y * 0.6, bx + bw / 2, GROUND_Y * 0.6 - bh, bx + bw, GROUND_Y * 0.6);
+    };
+    drawMountain(mtGraphics, -20, 160, GROUND_Y * 0.30);
+    drawMountain(mtGraphics, 100, 130, GROUND_Y * 0.22);
+    drawMountain(mtGraphics, 200, 180, GROUND_Y * 0.36);
+    drawMountain(mtGraphics, 350, 150, GROUND_Y * 0.26);
+    drawMountain(mtGraphics, 480, 200, GROUND_Y * 0.32);
+    drawMountain(mtGraphics, 580, 140, GROUND_Y * 0.20);
+    mtGraphics.fillStyle(0xc6dce8, 0.28);
+    mtGraphics.fillRect(0, Math.round(GROUND_Y * 0.32), W, Math.round(GROUND_Y * 0.06));
+
+    // ======================
+    // 5. ÁGUA DO PORTO
+    // ======================
+    const waterGraphics = scene.add.graphics().setDepth(-8);
+    const waterTop = Math.round(GROUND_Y * 0.62);
+    const waterH2 = GROUND_Y - waterTop;
+    for (let wy = waterTop; wy < GROUND_Y; wy += 2) {
+        const wt = (wy - waterTop) / waterH2;
+        const wr = Math.round(60 + (30 - 60) * wt);
+        const wg = Math.round(140 + (100 - 140) * wt);
+        const wb = Math.round(200 + (160 - 200) * wt);
+        waterGraphics.fillStyle((wr << 16) + (wg << 8) + wb, 1);
+        waterGraphics.fillRect(0, wy, W, 3);
+    }
+    waterGraphics.fillStyle(0xfff3a0, 0.28);
+    waterGraphics.fillEllipse(W * 0.15, GROUND_Y - 12, W * 0.22, 14);
+    waterGraphics.lineStyle(1, 0xaaddee, 0.35);
+    for (let ox = 0; ox < W; ox += 28) {
+        waterGraphics.strokeLineShape(new Phaser.Geom.Line(ox, waterTop + 8, ox + 18, waterTop + 8));
+    }
+    waterGraphics.lineStyle(1, 0xaaddee, 0.22);
+    for (let ox = 10; ox < W; ox += 34) {
+        waterGraphics.strokeLineShape(new Phaser.Geom.Line(ox, waterTop + 20, ox + 22, waterTop + 20));
     }
 
-    // 3. Lua Gigante Neon — posicionada no canto superior direito
-    const moonX = W * 0.82;
-    const moonY = skyH * 0.22;
-    const moonR = Math.round(W * 0.044);
-    skyGraphics.fillStyle(0xfff5cc, 0.08);
-    skyGraphics.fillCircle(moonX, moonY, moonR * 1.85);
-    skyGraphics.fillStyle(0xfff5cc, 0.16);
-    skyGraphics.fillCircle(moonX, moonY, moonR * 1.43);
-    skyGraphics.fillStyle(0xffe899, 0.95);
-    skyGraphics.fillCircle(moonX, moonY, moonR);
+    // ======================
+    // 6. BARCOS GRANDES ATRACADOS (lateral esquerda e direita)
+    // ======================
+    const boatGraphics = scene.add.graphics().setDepth(-6);
 
-    // 4. Silhuetas de Arranha-céus (Skyline) — proporcionais à largura e GROUND_Y
-    const bScale = W / 640; // fator de escala baseado na largura original
-    const buildings = [
-        { xr: -0.15, wr: 0.14, hr: 0.44 },
-        { xr: 0.015, wr: 0.12, hr: 0.56 },
-        { xr: 0.156, wr: 0.094, hr: 0.78 },
-        { xr: 0.273, wr: 0.133, hr: 0.50 },
-        { xr: 0.43, wr: 0.109, hr: 0.69 },
-        { xr: 0.562, wr: 0.125, hr: 0.53 },
-        { xr: 0.703, wr: 0.086, hr: 0.88 },
-        { xr: 0.812, wr: 0.141, hr: 0.59 },
-        { xr: 0.977, wr: 0.109, hr: 0.41 },
-        { xr: 1.11, wr: 0.133, hr: 0.66 }
-    ];
-    buildings.forEach((b, i) => {
-        const bx = Math.round(b.xr * W);
-        const bw = Math.round(b.wr * W);
-        const bh = Math.round(b.hr * GROUND_Y * 0.75);
-        // Bloco do prédio
-        skyGraphics.fillStyle(0x0a0c15, 1);
-        skyGraphics.fillRect(bx, GROUND_Y - bh, bw, bh);
-        // Linha de neon no topo
-        const neonColor = i % 2 === 0 ? 0x00f0ff : 0xff0055;
-        skyGraphics.lineStyle(1.5, neonColor, 0.85);
-        skyGraphics.strokeLineShape(new Phaser.Geom.Line(bx, GROUND_Y - bh, bx + bw, GROUND_Y - bh));
-        // Janelas iluminadas
-        skyGraphics.fillStyle(0xffdd00, 0.40);
-        for (let wx = bx + 6; wx < bx + bw - 6; wx += 10) {
-            for (let wy = GROUND_Y - bh + 12; wy < GROUND_Y - 10; wy += 16) {
-                if (Math.random() < 0.25) skyGraphics.fillRect(wx, wy, 2, 3);
+    const drawLargeBoat = (gx, boatCX, side) => {
+        // side: 1 = voltado pra direita, -1 = voltado pra esquerda
+        const waterLine = Math.round(GROUND_Y * 0.70);
+        const bW = Math.round(W * 0.22);   // largura grande
+        const bH = Math.round(H * 0.13);   // altura do casco grande
+        const hullTop = waterLine - Math.round(bH * 0.6);
+
+        // Casco principal
+        gx.fillStyle(0x1a3a6a, 1);
+        gx.fillRect(boatCX - bW / 2, hullTop, bW, bH);
+
+        // Faixa branca do casco
+        gx.fillStyle(0xf0f0f0, 1);
+        gx.fillRect(boatCX - bW / 2, hullTop, bW, Math.round(bH * 0.15));
+
+        // Faixa vermelha abaixo
+        gx.fillStyle(0x8b1010, 1);
+        gx.fillRect(boatCX - bW / 2, hullTop + Math.round(bH * 0.15), bW, Math.round(bH * 0.12));
+
+        // Proa (ponta da frente, voltada para o centro)
+        const proaX = boatCX + side * bW / 2;
+        gx.fillStyle(0x1a3a6a, 1);
+        gx.fillTriangle(
+            proaX, hullTop,
+            proaX + side * Math.round(bW * 0.20), hullTop + bH / 2,
+            proaX, hullTop + bH
+        );
+
+        // Superestrutura (ponte de comando)
+        const superX = boatCX - Math.round(bW * 0.15);
+        const superW = Math.round(bW * 0.45);
+        const superH = Math.round(bH * 0.80);
+        gx.fillStyle(0xe8dfc8, 1);
+        gx.fillRect(superX, hullTop - superH, superW, superH);
+
+        // Janelas da superestrutura
+        gx.fillStyle(0x6aadcc, 0.7);
+        for (let wi = 0; wi < 4; wi++) {
+            gx.fillRect(superX + 6 + wi * (Math.round(superW / 5)), hullTop - superH + 8, Math.round(superW / 6), Math.round(superH * 0.25));
+        }
+
+        // Nível superior da ponte
+        const bridgeW = Math.round(superW * 0.7);
+        const bridgeH = Math.round(superH * 0.4);
+        gx.fillStyle(0xd8cdb8, 1);
+        gx.fillRect(superX + Math.round(superW * 0.15), hullTop - superH - bridgeH, bridgeW, bridgeH);
+        gx.fillStyle(0x5090aa, 0.65);
+        for (let wi = 0; wi < 3; wi++) {
+            gx.fillRect(superX + Math.round(superW * 0.2) + wi * Math.round(bridgeW / 4), hullTop - superH - bridgeH + 5, Math.round(bridgeW / 5), Math.round(bridgeH * 0.5));
+        }
+
+        // Chaminés
+        const ch1X = boatCX - Math.round(bW * 0.08);
+        gx.fillStyle(0x333333, 1);
+        gx.fillRect(ch1X, hullTop - superH - bridgeH - Math.round(H * 0.10), 10, Math.round(H * 0.10));
+        gx.fillStyle(0x222222, 1);
+        gx.fillRect(ch1X - 3, hullTop - superH - bridgeH - Math.round(H * 0.10), 16, 6);
+        // Faixa da chaminé
+        gx.fillStyle(0xaa2222, 1);
+        gx.fillRect(ch1X, hullTop - superH - bridgeH - Math.round(H * 0.04), 10, 5);
+
+        // Segunda chaminé
+        const ch2X = ch1X + 18;
+        gx.fillStyle(0x333333, 1);
+        gx.fillRect(ch2X, hullTop - superH - bridgeH - Math.round(H * 0.08), 8, Math.round(H * 0.08));
+        gx.fillStyle(0x222222, 1);
+        gx.fillRect(ch2X - 2, hullTop - superH - bridgeH - Math.round(H * 0.08), 12, 5);
+
+        // Guindastes / mastros de carga
+        gx.lineStyle(3, 0x556070, 1);
+        const mastBaseX = boatCX + side * Math.round(bW * 0.25);
+        const mastBaseY = hullTop;
+        const mastTopY = hullTop - Math.round(H * 0.20);
+        gx.lineBetween(mastBaseX, mastBaseY, mastBaseX, mastTopY);
+        // Lança do guindaste
+        gx.lineStyle(2, 0x445060, 1);
+        gx.lineBetween(mastBaseX, mastTopY, mastBaseX - side * Math.round(bW * 0.3), mastTopY + Math.round(H * 0.06));
+        // Cabo
+        gx.lineStyle(1, 0x886644, 0.8);
+        gx.lineBetween(mastBaseX - side * Math.round(bW * 0.3), mastTopY + Math.round(H * 0.06), mastBaseX - side * Math.round(bW * 0.3), hullTop + bH * 0.3);
+
+        // Reflexo na água
+        gx.fillStyle(0x1a3a6a, 0.14);
+        gx.fillRect(boatCX - bW / 2, waterLine + 2, bW, Math.round(bH * 0.35));
+
+        // Cabo de atracação
+        gx.lineStyle(2, 0x9a7a40, 0.8);
+        gx.lineBetween(boatCX - side * Math.round(bW * 0.3), hullTop + bH, boatCX - side * Math.round(bW * 0.3), GROUND_Y);
+    };
+
+    // Barco grande esquerdo — voltado para a direita (+1)
+    drawLargeBoat(boatGraphics, Math.round(W * 0.11), 1);
+    // Barco grande direito — espelhado, voltado para a esquerda (-1)
+    drawLargeBoat(boatGraphics, Math.round(W * 0.89), -1);
+
+    // ======================
+    // 7. DOCA DE MADEIRA (Píer / Plataforma de Combate)
+    // ======================
+    const floorGraphics = scene.add.graphics().setDepth(-5);
+    const floorThick = Math.max(18, Math.round(H * 0.055));
+
+    for (let tx = 0; tx < W; tx += Math.round(W / 18)) {
+        floorGraphics.fillStyle(0x5c3a1e, 1);
+        floorGraphics.fillRect(tx, GROUND_Y, Math.round(W / 19), floorThick);
+        floorGraphics.fillStyle(0x3d2510, 1);
+        floorGraphics.fillRect(tx + Math.round(W / 19), GROUND_Y, 2, floorThick);
+    }
+    floorGraphics.fillStyle(0x3d2510, 1);
+    for (let vx = 0; vx < W; vx += Math.round(W / 5)) {
+        floorGraphics.fillRect(vx - 2, GROUND_Y, 5, floorThick);
+    }
+    floorGraphics.lineStyle(2, 0xc8a050, 0.9);
+    floorGraphics.strokeLineShape(new Phaser.Geom.Line(0, GROUND_Y, W, GROUND_Y));
+    floorGraphics.lineStyle(1, 0xf0d080, 0.4);
+    floorGraphics.strokeLineShape(new Phaser.Geom.Line(0, GROUND_Y - 1, W, GROUND_Y - 1));
+    floorGraphics.fillStyle(0x2e1a08, 1);
+    for (let px = Math.round(W * 0.1); px < W; px += Math.round(W * 0.22)) {
+        floorGraphics.fillRect(px, GROUND_Y + floorThick - 2, 8, Math.round(H * 0.06));
+    }
+    floorGraphics.fillStyle(0x1a1a1a, 0.8);
+    floorGraphics.fillCircle(Math.round(W * 0.02), GROUND_Y + 8, 6);
+    floorGraphics.fillCircle(Math.round(W * 0.98), GROUND_Y + 8, 6);
+
+    // ======================
+    // 8. PLATEIAS — Arquibancadas nas laterais com público
+    // ======================
+    const platGraphics = scene.add.graphics().setDepth(-7);
+
+    const drawPlateia = (gx, platX, platW, side) => {
+        // Arquibancada: degraus inclinados partindo do chão
+        const rows = 6;
+        const rowH = Math.round(H * 0.055);
+        const rowStep = Math.round(platW * 0.09); // recuo lateral por degrau
+
+        for (let r = 0; r < rows; r++) {
+            const rowY = GROUND_Y - (r + 1) * rowH;
+            const rowX = platX + (side === 1 ? r * rowStep : -(r * rowStep));
+            const rW = platW - r * rowStep;
+
+            // Degrau (concreto)
+            gx.fillStyle(0x6e7f8a, 1);
+            gx.fillRect(rowX, rowY, rW, rowH - 2);
+
+            // Borda frontal do degrau
+            gx.fillStyle(0x8fa0ae, 1);
+            gx.fillRect(rowX, rowY, rW, 3);
+
+            // Pessoas sentadas na fileira (pequenos retângulos coloridos)
+            const personW = 7;
+            const personH = Math.round(rowH * 0.65);
+            const personCount = Math.floor(rW / (personW + 2));
+            const colors = [0xe05050, 0x5080e0, 0x50c050, 0xe0c050, 0xe050c0, 0x50e0c0, 0xc08050, 0xffffff];
+            for (let p = 0; p < personCount; p++) {
+                const px2 = rowX + p * (personW + 2) + 1;
+                const py2 = rowY - personH + 2;
+                const col = colors[(p + r * 3) % colors.length];
+                // Corpo
+                gx.fillStyle(col, 0.85);
+                gx.fillRect(px2, py2 + Math.round(personH * 0.45), personW, Math.round(personH * 0.55));
+                // Cabeça
+                gx.fillStyle(0xf5c99a, 1);
+                gx.fillCircle(px2 + Math.round(personW / 2), py2 + Math.round(personH * 0.35), Math.round(personW * 0.38));
             }
         }
-    });
 
-    // 5. Ponte Tecnológica / Plataforma de Combate
-    const floorGraphics = scene.add.graphics().setDepth(-5);
-    const floorThick = Math.max(20, Math.round(H * 0.06));
+        // Estrutura traseira (parede de suporte)
+        const backH = rows * rowH + 8;
+        gx.fillStyle(0x4a5860, 1);
+        if (side === 1) {
+            gx.fillRect(platX - 6, GROUND_Y - backH, 8, backH);
+        } else {
+            gx.fillRect(platX + platW - 2, GROUND_Y - backH, 8, backH);
+        }
 
-    // Vigas estruturais abaixo da ponte
-    floorGraphics.lineStyle(2, 0x141824, 1);
-    for (let vx = 0; vx < W; vx += Math.round(W / 8)) {
-        floorGraphics.lineBetween(vx, GROUND_Y, vx + 40, GROUND_Y + floorThick);
-        floorGraphics.lineBetween(vx, GROUND_Y, vx - 40, GROUND_Y + floorThick);
-    }
+        // Corrimão / grade de proteção no topo
+        gx.lineStyle(2, 0xccddee, 0.8);
+        const topRowY = GROUND_Y - rows * rowH;
+        const topX = platX + (side === 1 ? (rows - 1) * rowStep : 0);
+        const topW = platW - (rows - 1) * rowStep;
+        gx.strokeLineShape(new Phaser.Geom.Line(topX, topRowY, topX + topW, topRowY));
 
-    // Corpo metálico escuro da plataforma
-    floorGraphics.fillStyle(0x161925, 1);
-    floorGraphics.fillRect(0, GROUND_Y, W, floorThick);
-
-    // Placa inferior de acabamento
-    floorGraphics.fillStyle(0x0e1017, 1);
-    floorGraphics.fillRect(0, GROUND_Y + floorThick - 4, W, 4);
-
-    // Faixa Neon Ciano Brilhante (onde os personagens pisam)
-    floorGraphics.lineStyle(3, 0x00f0ff, 1);
-    floorGraphics.strokeLineShape(new Phaser.Geom.Line(0, GROUND_Y, W, GROUND_Y));
-    // Brilho
-    floorGraphics.lineStyle(1, 0x00f0ff, 0.4);
-    floorGraphics.strokeLineShape(new Phaser.Geom.Line(0, GROUND_Y - 1, W, GROUND_Y - 1));
-    floorGraphics.strokeLineShape(new Phaser.Geom.Line(0, GROUND_Y + 1, W, GROUND_Y + 1));
-
-    // Listras de perigo amarelo/preto nas extremidades
-    const stripeW = Math.round(W * 0.12);
-    const stripeH = Math.round(floorThick * 0.35);
-    const drawHazardStripes = (startX, dir) => {
-        for (let offset = 0; offset < stripeW; offset += 10) {
-            floorGraphics.fillStyle(0xffdd00, 1);
-            floorGraphics.fillRect(startX + offset * dir, GROUND_Y, 5, stripeH);
+        // Bandeirinhas coloridas no corrimão
+        const flagColors = [0xff4444, 0x4488ff, 0xffdd00, 0x44cc44];
+        for (let f = 0; f < Math.floor(topW / 14); f++) {
+            const fx = topX + f * 14;
+            gx.fillStyle(flagColors[f % flagColors.length], 0.9);
+            gx.fillTriangle(fx, topRowY - 8, fx + 7, topRowY, fx, topRowY);
         }
     };
-    drawHazardStripes(0, 1);
-    drawHazardStripes(W, -1);
+
+    // Plateia esquerda (sobe para a esquerda, recua para a direita)
+    drawPlateia(platGraphics, Math.round(W * 0.26), Math.round(W * 0.18), -1);
+    // Plateia direita (sobe para a direita, recua para a esquerda)
+    drawPlateia(platGraphics, Math.round(W * 0.56), Math.round(W * 0.18), 1);
+
+    // ======================
+    // 9. POSTES DE ILUMINAÇÃO
+    // ======================
+    const propGraphics = scene.add.graphics().setDepth(-4);
+    const postH = Math.round(H * 0.22);
+
+    // Poste esquerdo
+    propGraphics.lineStyle(3, 0x607888, 1);
+    propGraphics.lineBetween(Math.round(W * 0.30), GROUND_Y, Math.round(W * 0.30), GROUND_Y - postH);
+    propGraphics.fillStyle(0xfff8a0, 0.9);
+    propGraphics.fillCircle(Math.round(W * 0.30), GROUND_Y - postH, 6);
+    propGraphics.lineStyle(1, 0xfff8a0, 0.25);
+    propGraphics.lineBetween(Math.round(W * 0.30), GROUND_Y - postH, Math.round(W * 0.30) + 30, GROUND_Y - postH - 10);
+
+    // Poste direito
+    propGraphics.lineStyle(3, 0x607888, 1);
+    propGraphics.lineBetween(Math.round(W * 0.70), GROUND_Y, Math.round(W * 0.70), GROUND_Y - postH);
+    propGraphics.fillStyle(0xfff8a0, 0.9);
+    propGraphics.fillCircle(Math.round(W * 0.70), GROUND_Y - postH, 6);
+    propGraphics.lineStyle(1, 0xfff8a0, 0.25);
+    propGraphics.lineBetween(Math.round(W * 0.70), GROUND_Y - postH, Math.round(W * 0.70) - 30, GROUND_Y - postH - 10);
+
+    // Barril / caixote esquerdo
+    propGraphics.fillStyle(0x5c3010, 1);
+    propGraphics.fillRect(Math.round(W * 0.03), GROUND_Y - 18, 18, 18);
+    propGraphics.lineStyle(1, 0x8a5a2a, 0.8);
+    propGraphics.strokeRect(Math.round(W * 0.03), GROUND_Y - 18, 18, 18);
+
+    // Barril / caixote direito
+    propGraphics.fillStyle(0x5c3010, 1);
+    propGraphics.fillRect(Math.round(W * 0.96), GROUND_Y - 18, 18, 18);
+    propGraphics.lineStyle(1, 0x8a5a2a, 0.8);
+    propGraphics.strokeRect(Math.round(W * 0.96), GROUND_Y - 18, 18, 18);
 }
 
 // Registrar Combos
